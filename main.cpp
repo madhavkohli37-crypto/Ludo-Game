@@ -88,7 +88,7 @@ int main() {
                     if (!ok) cout << "Invalid! Try again.\n";
                 }
 
-                bool extra = logic.movePawn(p, choice, dice);
+                bool extra = logic.movePawn(players, numPlayers, currentPlayerIdx, choice, dice);
 
                 // ASK TO SHOW BOARD AFTER EVERY MOVE
                 logic.askAndShowBoard(players, numPlayers, board);
