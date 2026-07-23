@@ -6,12 +6,17 @@ public:
     Pawn pawns[4];        // 4 pawns each
 
     Player() {}
-
+// parameterised constructor
+// initially house a initial is 0
+// house b initial 13
+// house c iitial26
+// house d initial 39
+// (for generalisation)
     Player(char h, int offset) {
         house = h;
         startOffset = offset;
     }
-
+//returns the number of pawns that are at home
     int pawnsAtHome() {
         int count = 0;
         for (int i = 0; i < 4; i++) {
