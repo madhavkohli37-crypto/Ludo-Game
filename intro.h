@@ -5,31 +5,36 @@ using namespace std;
 class welcome{
     public:
     void text() {
-        cout << "GAME TIPS\n";
-cout << "---------\n";
-cout << "1. Unlock multiple pawns early to increase your\n";
-cout << "   movement options.\n\n";
-
-cout << "2. Use Safe Cells (*) whenever possible to\n";
-cout << "   protect your pawns.\n\n";
-
-cout << "3. Capture opponents whenever you get the\n";
-cout << "   opportunity to slow their progress.\n\n";
-
-cout << "4. Avoid leaving a single pawn exposed near\n";
-cout << "   enemy pawns unless it is on a Safe Cell.\n\n";
-
-cout << "5. Plan your moves carefully instead of moving\n";
-cout << "   the same pawn every turn.\n\n";
-
-cout << "6. Remember that reaching HOME and capturing\n";
-cout << "   an opponent both grant an extra dice roll.\n\n";
-
-cout << "7. Always keep an eye on the exact roll needed\n";
-cout << "   to reach HOME.\n\n";
-cout<<"All the best to the players !\n\n";
-cout<<"/-------------------------------------/\n\n";
-cout<<"LET THE GAME BEGIN !\n\n";
+            cout << "\n";
+    cout << "+-------------------------------------------------------------+\n";
+    cout << "|                  PRO TIPS & STRATEGY                          |\n";
+    cout << "+-------------------------------------------------------------+\n";
+    cout << "|                                                             |\n";
+    cout << "|  [1] UNLOCK EARLY                                           |\n";
+    cout << "|      Unlock multiple pawns to increase movement options.     |\n";
+    cout << "|                                                             |\n";
+    cout << "|  [2] USE SAFE CELLS (*)                                     |\n";
+    cout << "|      Protect your pawns from capture on Safe Cells.        |\n";
+    cout << "|                                                             |\n";
+    cout << "|  [3] CAPTURE OPPONENTS                                      |\n";
+    cout << "|      Send them back to base and earn an extra turn!        |\n";
+    cout << "|                                                             |\n";
+    cout << "|  [4] AVOID EXPOSURE                                         |\n";
+    cout << "|      Don't leave pawns vulnerable near enemies.            |\n";
+    cout << "|                                                             |\n";
+    cout << "|  [5] PLAN AHEAD                                             |\n";
+    cout << "|      Spread pawns instead of moving the same one always.   |\n";
+    cout << "|                                                             |\n";
+    cout << "|  [6] EXTRA TURNS                                            |\n";
+    cout << "|      Rolling 6, reaching HOME, or capturing = extra roll!  |\n";
+    cout << "|                                                             |\n";
+    cout << "|  [7] EXACT ROLL FOR HOME                                    |\n";
+    cout << "|      Overshooting means you cannot move that turn.         |\n";
+    cout << "|                                                             |\n";
+    cout << "+-------------------------------------------------------------+\n";
+    cout << "|              Good Luck & Have Fun!                          |\n";
+    cout << "+-------------------------------------------------------------+\n";
+    cout << "\n        >>>  LET THE GAME BEGIN!  <<<\n\n";
 cout<<"(PRESS ENTER TO CONTINUE)\n\n";
 cin.get();
     }
@@ -38,88 +43,56 @@ cin.get();
             return false;
         }
         if(n==2) {
-            cout << "==========================================================\n";
-cout << "                    LUDO RULE BOOK\n";
-cout << "==========================================================\n\n";
-
-cout << "OBJECTIVE\n";
-cout << "---------\n";
-cout << "Be the first player to move all 4 of your pawns\n";
-cout << "from your house to HOME.\n\n";
-
-cout << "NUMBER OF PLAYERS\n";
-cout << "-----------------\n";
-cout << "This game supports:\n";
-cout << "-> 2 Players\n";
-cout << "-> 3 Players\n";
-cout << "-> 4 Players\n\n";
-
-cout << "PAWNS\n";
-cout << "-----\n";
-cout << "Each player starts with 4 pawns inside their house.\n\n";
-
-cout << "ROLLING THE DICE\n";
-cout << "----------------\n";
-cout << "A standard six-sided dice is used.\n\n";
-
-cout << "UNLOCKING A PAWN\n";
-cout << "----------------\n";
-cout << "A pawn can leave the house only after rolling a 6.\n\n";
-
-cout << "MOVEMENT\n";
-cout << "--------\n";
-cout << "Move one pawn forward according to the dice value.\n\n";
-cout << "If multiple pawns can move,\n";
-cout << "the player chooses which pawn to move.\n\n";
-
-cout << "MULTIPLE ROLLS\n";
-cout << "--------------\n";
-cout << "Rolling a 6 grants an extra dice roll.\n\n";
-cout << "If a player rolls three consecutive 6s,\n";
-cout << "the entire turn is cancelled.\n\n";
-
-cout << "SAFE CELLS\n";
-cout << "----------\n";
-cout << "Cells marked with '*' are Safe Cells.\n\n";
-cout << "A pawn standing on a Safe Cell cannot be captured.\n\n";
-
-cout << "CAPTURING\n";
-cout << "---------\n";
-cout << "If your pawn lands exactly on an opponent's pawn\n";
-cout << "that is NOT on a Safe Cell,\n\n";
-cout << "-> The opponent's pawn returns to its house.\n";
-cout << "-> You receive an extra turn.\n\n";
-
-cout << "HOME STRETCH\n";
-cout << "------------\n";
-cout << "After completing one full round,\n";
-cout << "the pawn enters its Home Stretch.\n\n";
-cout << "Only that player's pawns may enter this path.\n\n";
-
-cout << "REACHING HOME\n";
-cout << "-------------\n";
-cout << "A pawn reaches HOME only by obtaining\n";
-cout << "the exact dice value.\n\n";
-cout << "If the dice exceeds the remaining distance,\n";
-cout << "the pawn does not move.\n\n";
-cout << "Reaching HOME rewards the player with\n";
-cout << "one extra dice roll.\n\n";
-
-cout << "WINNER\n";
-cout << "------\n";
-cout << "The first player to bring all 4 pawns\n";
-cout << "to HOME wins the game.\n\n";
-
-cout << "BOARD LEGEND\n";
-cout << "------------\n";
-cout << "A B C D  -> Player Houses\n";
-cout << "1 2 3 4  -> Player Paths\n";
-cout << "H        -> Home Path\n";
-cout << "*        -> Safe Cell\n";
-cout << ".        -> Normal Cell\n\n";
-
-cout << "==========================================================\n";
-cout << "(Press ENTER to continue...)\n";
+              cout << "\n";
+    cout << "╔══════════════════════════════════════════════════════════════╗\n";
+    cout << "║                    LUDO RULEBOOK                             ║\n";
+    cout << "╠══════════════════════════════════════════════════════════════╣\n";
+    cout << "║  1. SETUP                                                  ║\n";
+    cout << "║     • 2-4 players can play                                 ║\n";
+    cout << "║     • Each player gets 4 pawns in their base               ║\n";
+    cout << "║     • Houses: A (Red), B (Green), C (Yellow), D (Blue)     ║\n";
+    cout << "╠══════════════════════════════════════════════════════════════╣\n";
+    cout << "║  2. UNLOCKING PAWNS                                        ║\n";
+    cout << "║     • A pawn can ONLY leave base if you roll a 6           ║\n";
+    cout << "║     • The 6 also counts as a move (pawn moves 6 steps)     ║\n";
+    cout << "╠══════════════════════════════════════════════════════════════╣\n";
+    cout << "║  3. ROLLING THE DICE                                       ║\n";
+    cout << "║     • Roll by pressing Enter                               ║\n";
+    cout << "║     • Roll a 6 → Get an EXTRA turn (roll again)            ║\n";
+    cout << "║     • Roll three 6s in a row → Turn CANCELLED, all lost    ║\n";
+    cout << "╠══════════════════════════════════════════════════════════════╣\n";
+    cout << "║  4. MOVEMENT                                               ║\n";
+    cout << "║     • Move pawn forward by exact dice value                ║\n";
+    cout << "║     • Must use the full roll — cannot move partial          ║\n";
+    cout << "║     • Need EXACT roll to enter home (position 56)          ║\n";
+    cout << "║     • Overshooting home = cannot move                      ║\n";
+    cout << "╠══════════════════════════════════════════════════════════════╣\n";
+    cout << "║  5. SAFE SPOTS (*)                                         ║\n";
+    cout << "║     • Marked with * on the board                           ║\n";
+    cout << "║     • Pawns on safe spots CANNOT be captured               ║\n";
+    cout << "║     • Each player has one safe spot at their start         ║\n";
+    cout << "╠══════════════════════════════════════════════════════════════╣\n";
+    cout << "║  6. CAPTURING (TRAPPING)                                   ║\n";
+    cout << "║     • Land on opponent's pawn → They go back to base!      ║\n";
+    cout << "║     • Cannot capture on safe spots                         ║\n";
+    cout << "║     • Capturing gives you an EXTRA turn                    ║\n";
+    cout << "╠══════════════════════════════════════════════════════════════╣\n";
+    cout << "║  7. EXTRA TURNS                                            ║\n";
+    cout << "║     You get an extra turn when you:                        ║\n";
+    cout << "║     • Roll a 6                                             ║\n";
+    cout << "║     • Capture an opponent's pawn                           ║\n";
+    cout << "║     • Move a pawn into the central home (H)                ║\n";
+    cout << "╠══════════════════════════════════════════════════════════════╣\n";
+    cout << "║  8. HOME STRETCH                                           ║\n";
+    cout << "║     • After completing the outer track, enter home stretch  ║\n";
+    cout << "║     • Positions 51-55 are the colored path (1,2,3,4)       ║\n";
+    cout << "║     • Need exact roll to reach center H (position 56)      ║\n";
+    cout << "╠══════════════════════════════════════════════════════════════╣\n";
+    cout << "║  9. WINNING                                                ║\n";
+    cout << "║     • First player to get ALL 4 pawns to home WINS!        ║\n";
+    cout << "║     • Game ends immediately when someone wins              ║\n";
+    cout << "╚══════════════════════════════════════════════════════════════╝\n";
+    cout<<"(PRESS ENTER TO CONTINUE)\n\n";
 cin.get();
 cout << "==========================================================\n";
 return false;
@@ -163,7 +136,7 @@ return false;
         }
         else if(n==3) {
               board= {
-    "  A   A     . 2 .     B   B ",
+    "  A   A     . . .     B   B ",
     "            . 2 *           ",
     "  A   A     * 2 .     B   B ",
     "            . 2 .           ",
