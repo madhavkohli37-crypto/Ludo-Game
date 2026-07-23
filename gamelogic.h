@@ -112,7 +112,7 @@ public:
             p.position = 0;
             p.isActive = true;
             cout << "Pawn " << (pawnId + 1) << " unlocked! Entered the track.\n";
-            return true;
+            return false;
         }
 
         int newPos = p.position + dice;
