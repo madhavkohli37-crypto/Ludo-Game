@@ -1,5 +1,5 @@
 #include "intro.h"
-#include "gamelogic.h"
+#include "ai.h"
 
 int main() {
     srand(time(0));
@@ -7,35 +7,70 @@ int main() {
     bool winner = false;
     int currentPlayerIdx = 0;
     int numPlayers;
+    int numHuman;  // Number of human players
 
     vector<string> board;
     welcome w;
     w.showTitle();
-cout << "============================\n";
-cout << "        MAIN MENU\n";
-cout << "============================\n\n";
-cout << "1. Start New Game\n";
-cout << "2. View Rule Book and Start New Game\n";
-cout << "3. Exit\n\n";
-cout << "Enter your choice: ";
-int num;
-cin>>num;
-cin.get();
-if(w.fun(num)) {
-    return 0;
-}
-w.text();
+
+    // ============ MAIN MENU ============
+    cout << "============================\n";
+    cout << "        MAIN MENU\n";
+    cout << "============================\n\n";
+    cout << "Press 1 to Start New Game\n";
+    cout << "Press 2 to View Rule Book and Start New Game\n";
+    cout << "Press 3 to Exit\n\n";
+    cout << "Enter your choice: ";
+    
+    int num;
+    cin >> num;
+    cin.get();
+    
+    if (w.fun(num)) {
+        return 0;
+    }
+    w.text();
+
+    // ============ PLAYER SETUP ============
     w.th();
     cin >> numPlayers;
     cin.get();
 
     if (w.th2(numPlayers) == false) {
-        cout << "\nGame ends\n";
+        cout << "\nGame ends. \nGOOD BYE !\n\n";
         return 0;
     }
 
-    w.pb(board, numPlayers);
+    // NEW: Ask how many are human
+    cout << "\nHow many HUMAN players? (1-" << numPlayers << "): ";
+    cin >> numHuman;
+    cin.get();
+    
+    while (numHuman < 1 || numHuman > numPlayers) {
+        cout << "Invalid! Enter 1 to " << numPlayers << ": ";
+        cin >> numHuman;
+        cin.get();
+    }
 
+    // Setup AI flags
+    bool isAI[4] = {false, false, false, false};
+    AI ai;
+    
+    // First 'numHuman' players are human, rest are AI
+    for (int i = numHuman; i < numPlayers; i++) {
+        isAI[i] = true;
+    }
+
+    cout << "\n--- Player Setup ---\n";
+    for (int i = 0; i < numPlayers; i++) {
+        cout << "Player " << (char)('A' + i);
+        if (isAI[i]) cout << " [AI]";
+        else cout << " [Human]";
+        cout << "\n";
+    }
+    cout << "--------------------\n";
+
+    w.pb(board, numPlayers);
 
     Player players[4] = {
         Player('A', 0),
@@ -49,27 +84,36 @@ w.text();
 
     cout << "\n========== GAME START ==========\n";
 
+    // ============ MAIN GAME LOOP ============
     while (!winner) {
         Player &p = players[currentPlayerIdx];
-        bool earnedExtra = true;  // Start true to enter the loop at least once
+        bool earnedExtra = true;
 
-        // ============ EXTRA TURN LOOP ============
-        // Keep giving turns while player earns extras
         while (earnedExtra && !winner) {
-            earnedExtra = false;  // Reset for this turn
+            earnedExtra = false;
 
             cout << "\n--------------------------------\n";
-            cout << "PLAYER " << p.house << "'s TURN\n";
-            cout << "--------------------------------\n";
+            cout << "PLAYER " << p.house << "'s TURN";
+            if (isAI[currentPlayerIdx]) cout << " [AI]";
+            cout << "\n--------------------------------\n";
 
             logic.showStatus(players, numPlayers);
 
-            // Collect dice rolls
-            vector<int> rolls = turn(currentPlayerIdx + 1);
+            // ============ ROLL DICE ============
+            vector<int> rolls;
+            
+            if (isAI[currentPlayerIdx]) {
+                // AI rolls automatically
+                rolls = turnAI(currentPlayerIdx + 1);
+            }
+            else {
+                // Human presses Enter to roll
+                rolls = turn(currentPlayerIdx + 1);
+            }
 
             if (rolls.empty()) {
                 cout << "\nTurn ended (3 sixes).\n";
-                break;  // Exit extra turn loop
+                break;
             }
 
             cout << "\nRolls: ";
@@ -85,28 +129,43 @@ w.text();
                     continue;
                 }
 
-                cout << "\nValid pawns: ";
-                for (int id : valid) cout << (id + 1) << " ";
-                cout << "\nSelect pawn: ";
-
                 int choice;
-                cin >> choice;
-                cin.ignore();
-                choice--;
 
-                bool ok = false;
-                for (int id : valid) {
-                    if (id == choice) ok = true;
+                // ============ AI DECISION ============
+                if (isAI[currentPlayerIdx]) {
+                    cout << "\n[AI is thinking...]\n";
+                    // Small delay for realism
+                    for (volatile int i = 0; i < 50000000; i++);
+                    choice = ai.choosePawn(p, valid, dice, players, numPlayers, logic);
                 }
-                if (!ok) {
-                    cout << "Invalid! Skipping.\n";
-                    continue;
+                // ============ HUMAN DECISION ============
+                else {
+                    cout << "\nValid pawns: ";
+                    for (int id : valid) cout << (id + 1) << " ";
+                    cout << "\nSelect pawn: ";
+
+                    cin >> choice;
+                    cin.ignore();
+                    choice--;
+
+                    bool ok = false;
+                    for (int id : valid) {
+                        if (id == choice) ok = true;
+                    }
+                    if (!ok) {
+                        cout << "Invalid! Skipping.\n";
+                        continue;
+                    }
                 }
 
-                // Move and check if extra turn earned
+                // Move pawn
                 bool extra = logic.movePawn(players, numPlayers, currentPlayerIdx, choice, dice);
                 logic.showStatus(players, numPlayers);
-                logic.askAndShowBoard(board);
+
+                // Only ask human to show board
+                if (!isAI[currentPlayerIdx]) {
+                    logic.askAndShowBoard(board);
+                }
 
                 if (extra) {
                     earnedExtra = true;
@@ -114,20 +173,24 @@ w.text();
                 }
             }
 
-            // Check win after all rolls processed
+            // Check win
             if (p.pawnsAtHome() == 4) {
                 winner = true;
-                cout << "\n\n>>> PLAYER " << p.house << " WINS! <<<\n";
+                cout << "\n\n>>> PLAYER " << p.house;
+                if (isAI[currentPlayerIdx]) cout << " [AI]";
+                cout << " WINS! <<<\n";
                 break;
             }
         }
 
-        // Move to next player only if game not over
         if (!winner) {
             currentPlayerIdx = (currentPlayerIdx + 1) % numPlayers;
         }
     }
 
     cout << "\n========== GAME OVER ==========\n";
+    cout << "THANKS FOR PLAYING\n";
+    cout << "HOPE YOU ENJOYED and WE WISH TO SEE YOU AGAIN !\n\n";
+    cout << "GOOD BYE ! \n";
     return 0;
 }
