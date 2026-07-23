@@ -52,7 +52,7 @@ class welcome{
         }
         else {
             board= {
-    "  A   A     . 2 .     B   B ",
+    "  A   A     . . .     B   B ",
     "            . 2 *           ",
     "  A   A     * 2 .     B   B ",
     "            . 2 .           ",
@@ -64,7 +64,7 @@ class welcome{
     "            . 4 .           ",
     "  D   D     . 4 *     C   C ",
     "            * 4 .           ",
-    "  D   D     . 4 .     C   C ",
+    "  D   D     . . .     C   C ",
 };
         }
         cout<<"\n\nInitial board :-\n\n";
