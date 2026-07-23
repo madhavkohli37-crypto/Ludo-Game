@@ -140,9 +140,9 @@ vector<int>numbers;
 
 class Pawn {
 public:
-    int position;      // -1 = in base, 0-56 = track/home stretch
-    bool isHome;       // true if reached center H (position 56)
-    bool isActive;     // true if on track
+    int position;      
+    bool isHome;       
+    bool isActive;    
 
     Pawn() {
         position = -1;
@@ -152,22 +152,15 @@ public:
 };
 class Player {
 public:
-    char house;           // 'A', 'B', 'C', 'D'
-    int startOffset;      // Where they enter outer track
-    Pawn pawns[4];        // 4 pawns each
+    char house;          
+    int startOffset;
+    Pawn pawns[4];
 
     Player() {}
-// parameterised constructor
-// initially house a initial is 0
-// house b initial 13
-// house c iitial26
-// house d initial 39
-// (for generalisation)
     Player(char h, int offset) {
         house = h;
         startOffset = offset;
     }
-//returns the number of pawns that are at home
     int pawnsAtHome() {
         int count = 0;
         for (int i = 0; i < 4; i++) {
@@ -226,7 +219,6 @@ public:
         return valid;
     }
 
-    // ============ BOARD DISPLAY ============
 
     void askAndShowBoard(vector<string> &v) {
         bool choice;
@@ -241,7 +233,6 @@ public:
         }
     }
 
-    // ============ STATUS DISPLAY ============
 
     void showStatus(Player players[], int numPlayers) {
         cout << "\n========== PAWN STATUS ==========\n";
@@ -261,7 +252,6 @@ public:
         cout << "=================================\n";
     }
 
-    // ============ CAPTURE LOGIC ============
 
     pair<int, int> checkCapture(Player players[], int numPlayers, int movingPlayerIdx, int absPos) {
         if (isSafe(absPos)) return {-1, -1};
@@ -292,13 +282,11 @@ public:
              << " was CAPTURED and sent back to base!\n";
     }
 
-    // ============ MOVE PAWN ============
 
     bool movePawn(Player players[], int numPlayers, int movingPlayerIdx, int pawnId, int dice) {
         Player &player = players[movingPlayerIdx];
         Pawn &p = player.pawns[pawnId];
 
-        // Unlock from base
         if (p.position == -1) {
             if (dice != 6) {
                 cout << "Pawn " << (pawnId + 1) << " is in base. Need a 6 to unlock!\n";
@@ -319,20 +307,17 @@ public:
 
         p.position = newPos;
 
-        // Reached home
         if (newPos == 56) {
             p.isHome = true;
             cout << "Pawn " << (pawnId + 1) << " reached HOME!\n";
             return true;
         }
 
-        // Home stretch
         if (newPos >= 51) {
             cout << "Pawn " << (pawnId + 1) << " entered home stretch at position " << newPos << "\n";
             return false;
         }
 
-        // On track - check for capture
         int absPos = getAbsPos(player, newPos);
         cout << "Pawn " << (pawnId + 1) << " moved to track position " << newPos;
         cout << " (absolute: " << absPos << ")\n";
@@ -353,9 +338,6 @@ public:
         return false;
     }
 
-    // ============ EXTRA TURN HANDLING ============
-    // This function handles a complete turn (roll + move) for one player
-    // Returns true if the player earned an extra turn (can be called again)
 
     bool playTurn(Player players[], int numPlayers, int currentPlayerIdx, vector<string> &board) {
         Player &p = players[currentPlayerIdx];
@@ -364,18 +346,10 @@ public:
         cout << "PLAYER " << p.house << "'s TURN\n";
         cout << "--------------------------------\n";
 
-        // Show current status
         showStatus(players, numPlayers);
 
-        // Collect dice rolls (from turn.h)
-        // NOTE: You'll need to include turn.h and call turn() from main,
-        // or pass the rolls vector as parameter. 
-        // For now, this is a placeholder structure.
 
-        // Since turn() is in turn.h and uses cin.get(), we can't easily call it here
-        // without including. So the extra turn loop should be in main.cpp instead.
         
-        // This function is kept simple - the extra turn loop goes in main
         return false;
     }
 };
@@ -422,12 +396,10 @@ int main() {
 
     while (!winner) {
         Player &p = players[currentPlayerIdx];
-        bool earnedExtra = true;  // Start true to enter the loop at least once
+        bool earnedExtra = true;
 
-        // ============ EXTRA TURN LOOP ============
-        // Keep giving turns while player earns extras
         while (earnedExtra && !winner) {
-            earnedExtra = false;  // Reset for this turn
+            earnedExtra = false;
 
             cout << "\n--------------------------------\n";
             cout << "PLAYER " << p.house << "'s TURN\n";
@@ -435,19 +407,17 @@ int main() {
 
             logic.showStatus(players, numPlayers);
 
-            // Collect dice rolls
             vector<int> rolls = turn(currentPlayerIdx + 1);
 
             if (rolls.empty()) {
                 cout << "\nTurn ended (3 sixes).\n";
-                break;  // Exit extra turn loop
+                break;
             }
 
             cout << "\nRolls: ";
             for (int r : rolls) cout << r << " ";
             cout << "\n";
 
-            // Process each roll
             for (int dice : rolls) {
                 vector<int> valid = logic.getValidPawns(p, dice);
 
@@ -474,7 +444,6 @@ int main() {
                     continue;
                 }
 
-                // Move and check if extra turn earned
                 bool extra = logic.movePawn(players, numPlayers, currentPlayerIdx, choice, dice);
                 logic.showStatus(players, numPlayers);
                 logic.askAndShowBoard(board);
@@ -485,7 +454,6 @@ int main() {
                 }
             }
 
-            // Check win after all rolls processed
             if (p.pawnsAtHome() == 4) {
                 winner = true;
                 cout << "\n\n>>> PLAYER " << p.house << " WINS! <<<\n";
@@ -493,7 +461,6 @@ int main() {
             }
         }
 
-        // Move to next player only if game not over
         if (!winner) {
             currentPlayerIdx = (currentPlayerIdx + 1) % numPlayers;
         }
