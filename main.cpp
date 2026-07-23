@@ -1,195 +1,126 @@
-#include"player.h"
-class GameLogic {
-public:
-    int safeSpots[8] = {0, 8, 13, 21, 26, 34, 39, 47};
-    bool isSafe(int absPos) {
-        for (int i = 0; i < 8; i++) {
-            if (safeSpots[i] == absPos) return true;
-        }
-        return false;
+#include "intro.h"
+#include "gamelogic.h"
+
+int main() {
+    srand(time(0));
+
+    bool winner = false;
+    int currentPlayerIdx = 0;
+    int numPlayers;
+
+    vector<string> board;
+    welcome w;
+    w.showTitle();
+    w.th();
+
+    cin >> numPlayers;
+    cin.get();
+
+    if (w.th2(numPlayers) == false) {
+        cout << "\nGame ends\n";
+        return 0;
     }
 
-    int getAbsPos(Player &player, int relPos) {
-        if (relPos < 0 || relPos > 50) return -1;
-        return (player.startOffset + relPos) % 52;
-    }
+    w.pb(board, numPlayers);
 
-    vector<int> getValidPawns(Player &player, int dice) {
-        vector<int> valid;
-        for (int i = 0; i < 4; i++) {
-            if (player.pawns[i].position == -1) {
-                if (dice == 6) valid.push_back(i);
+    cout << "\nRules:\n";
+    cout << "1. Roll 6 to unlock pawn from base\n";
+    cout << "2. Move pawns by dice value\n";
+    cout << "3. Capture opponents by landing on them (not safe spots)\n";
+    cout << "4. Reach home with exact roll\n";
+    cout << "5. First to get all 4 pawns home wins!\n\n";
+
+    Player players[4] = {
+        Player('A', 0),
+        Player('B', 13),
+        Player('C', 26),
+        Player('D', 39)
+    };
+
+    GameLogic logic;
+    logic.showStatus(players, numPlayers);
+
+    cout << "\n========== GAME START ==========\n";
+
+    while (!winner) {
+        Player &p = players[currentPlayerIdx];
+        bool earnedExtra = true;  // Start true to enter the loop at least once
+
+        // ============ EXTRA TURN LOOP ============
+        // Keep giving turns while player earns extras
+        while (earnedExtra && !winner) {
+            earnedExtra = false;  // Reset for this turn
+
+            cout << "\n--------------------------------\n";
+            cout << "PLAYER " << p.house << "'s TURN\n";
+            cout << "--------------------------------\n";
+
+            logic.showStatus(players, numPlayers);
+
+            // Collect dice rolls
+            vector<int> rolls = turn(currentPlayerIdx + 1);
+
+            if (rolls.empty()) {
+                cout << "\nTurn ended (3 sixes).\n";
+                break;  // Exit extra turn loop
             }
-            else if (!player.pawns[i].isHome) {
-                if (player.pawns[i].position + dice <= 56) {
-                    valid.push_back(i);
+
+            cout << "\nRolls: ";
+            for (int r : rolls) cout << r << " ";
+            cout << "\n";
+
+            // Process each roll
+            for (int dice : rolls) {
+                vector<int> valid = logic.getValidPawns(p, dice);
+
+                if (valid.empty()) {
+                    cout << "\nNo valid moves for " << dice << ".\n";
+                    continue;
+                }
+
+                cout << "\nValid pawns: ";
+                for (int id : valid) cout << (id + 1) << " ";
+                cout << "\nSelect pawn: ";
+
+                int choice;
+                cin >> choice;
+                cin.ignore();
+                choice--;
+
+                bool ok = false;
+                for (int id : valid) {
+                    if (id == choice) ok = true;
+                }
+                if (!ok) {
+                    cout << "Invalid! Skipping.\n";
+                    continue;
+                }
+
+                // Move and check if extra turn earned
+                bool extra = logic.movePawn(players, numPlayers, currentPlayerIdx, choice, dice);
+                logic.showStatus(players, numPlayers);
+                logic.askAndShowBoard(board);
+
+                if (extra) {
+                    earnedExtra = true;
+                    cout << "\n*** Extra turn earned! ***\n";
                 }
             }
-        }
-        return valid;
-    }
 
-    bool movePawn(Player &player, int pawnId, int dice) {
-        Pawn &p = player.pawns[pawnId];
-
-        if (p.position == -1) {
-            if (dice != 6) {
-                cout << "Pawn " << (pawnId + 1) << " in base. Need 6!\n";
-                return false;
-            }
-            p.position = 0;
-            p.isActive = true;
-            cout << "Pawn " << (pawnId + 1) << " unlocked! On track.\n";
-            return true;
-        }
-
-        int newPos = p.position + dice;
-
-        if (newPos > 56) {
-            cout << "Need exact roll for home. Can't move.\n";
-            return false;
-        }
-
-        p.position = newPos;
-
-        if (newPos == 56) {
-            p.isHome = true;
-            cout << "Pawn " << (pawnId + 1) << " reached HOME!\n";
-            return true;
-        }
-
-        if (newPos >= 51) {
-            cout << "Pawn " << (pawnId + 1) << " on home stretch at " << newPos << "\n";
-            return false;
-        }
-
-        int absPos = getAbsPos(player, newPos);
-        cout << "Pawn " << (pawnId + 1) << " moved to " << newPos;
-        cout << " (abs: " << absPos << ")\n";
-
-        if (isSafe(absPos)) {
-            cout << "Safe spot!\n";
-        }
-
-        return false;
-    }
-    // NEW: Ask if player wants to see board, then show it
-    void askAndShowBoard( vector<string> &v) {
-        bool choice;
-        cout << "\nShow board? (1 = Yes, 0 = No): ";
-        cin >> choice;
-        cin.ignore();
-
-        if (choice == true) {
-           for(string s : v) {
-            cout << s<< endl;
-           }
-         }
-    }
-    // ============ CAPTURE (TRAP) LOGIC ============
-
-    // Check if any opponent is at this absolute position
-    // Returns {enemyPlayerIdx, enemyPawnIdx} or {-1, -1} if none
-    pair<int, int> checkCapture(Player players[], int numPlayers, int movingPlayerIdx, int absPos) {
-        // Can't capture on safe spots
-        if (isSafe(absPos)) return {-1, -1};
-
-        for (int p = 0; p < numPlayers; p++) {
-            if (p == movingPlayerIdx) continue; // Skip yourself
-
-            for (int pawnId = 0; pawnId < 4; pawnId++) {
-                Pawn &enemy = players[p].pawns[pawnId];
-
-                // Only check pawns that are active on the outer track
-                // (not in base, not on home stretch, not already home)
-                if (enemy.position >= 0 && enemy.position <= 50 && !enemy.isHome) {
-                    int enemyAbsPos = getAbsPos(players[p], enemy.position);
-
-                    if (enemyAbsPos == absPos) {
-                        // FOUND! Return who to capture
-                        return {p, pawnId};
-                    }
-                }
+            // Check win after all rolls processed
+            if (p.pawnsAtHome() == 4) {
+                winner = true;
+                cout << "\n\n>>> PLAYER " << p.house << " WINS! <<<\n";
+                break;
             }
         }
-        return {-1, -1}; // No one to capture
+
+        // Move to next player only if game not over
+        if (!winner) {
+            currentPlayerIdx = (currentPlayerIdx + 1) % numPlayers;
+        }
     }
 
-    // Send a captured pawn back to base
-    void sendToBase(Player &player, int pawnId) {
-        player.pawns[pawnId].position = -1;
-        player.pawns[pawnId].isActive = false;
-        player.pawns[pawnId].isHome = false;
-        cout << "Player " << player.house << "'s Pawn " << (pawnId + 1)
-             << " was CAPTURED and sent back to base!\n";
-    }
-
-    // ============ MOVE PAWN (with capture support) ============
-
-    // Now takes all players array to check for captures
-    bool movePawn(Player players[], int numPlayers, int movingPlayerIdx, int pawnId, int dice) {
-        Player &player = players[movingPlayerIdx];
-        Pawn &p = player.pawns[pawnId];
-
-        // CASE 1: Pawn in base - need 6 to unlock
-        if (p.position == -1) {
-            if (dice != 6) {
-                cout << "Pawn " << (pawnId + 1) << " is in base. Need a 6 to unlock!\n";
-                return false;
-            }
-            p.position = 0;
-            p.isActive = true;
-            cout << "Pawn " << (pawnId + 1) << " unlocked! Entered the track.\n";
-            return true;  // Extra turn for rolling 6
-        }
-
-        // Calculate new position
-        int newPos = p.position + dice;
-
-        // Can't overshoot home (need exact roll)
-        if (newPos > 56) {
-            cout << "Need exact roll to reach home. Can't move.\n";
-            return false;
-        }
-
-        // Move the pawn
-        p.position = newPos;
-
-        // CASE 2: Reached center home (position 56)
-        if (newPos == 56) {
-            p.isHome = true;
-            cout << "Pawn " << (pawnId + 1) << " reached HOME!\n";
-            return true;  // Extra turn for reaching home
-        }
-
-        // CASE 3: On home stretch (positions 51-55)
-        if (newPos >= 51) {
-            cout << "Pawn " << (pawnId + 1) << " entered home stretch at position " << newPos << "\n";
-            return false;
-        }
-
-        // CASE 4: On outer track - check for captures!
-        int absPos = getAbsPos(player, newPos);
-        cout << "Pawn " << (pawnId + 1) << " moved to track position " << newPos;
-        cout << " (absolute: " << absPos << ")\n";
-
-        // Check if landed on safe spot
-        if (isSafe(absPos)) {
-            cout << "Landed on a safe spot - cannot be captured here!\n";
-            return false;
-        }
-
-        // Try to capture opponent!
-        pair<int, int> captured = checkCapture(players, numPlayers, movingPlayerIdx, absPos);
-
-        if (captured.first != -1) {
-            int enemyPlayerIdx = captured.first;
-            int enemyPawnIdx = captured.second;
-            sendToBase(players[enemyPlayerIdx], enemyPawnIdx);
-            cout << ">> CAPTURE SUCCESSFUL! You get an extra turn! <<\n";
-            return true;  // Extra turn for capture
-        }
-
-        return false; // No extra turn
-    }
-};
+    cout << "\n========== GAME OVER ==========\n";
+    return 0;
+}
