@@ -11,8 +11,21 @@ int main() {
     vector<string> board;
     welcome w;
     w.showTitle();
+cout << "============================\n";
+cout << "        MAIN MENU\n";
+cout << "============================\n\n";
+cout << "1. Start New Game\n";
+cout << "2. View Rule Book and Start New Game\n";
+cout << "3. Exit\n\n";
+cout << "Enter your choice: ";
+int num;
+cin>>num;
+cin.get();
+if(w.fun(num)) {
+    return 0;
+}
+w.text();
     w.th();
-
     cin >> numPlayers;
     cin.get();
 
@@ -23,12 +36,6 @@ int main() {
 
     w.pb(board, numPlayers);
 
-    cout << "\nRules:\n";
-    cout << "1. Roll 6 to unlock pawn from base\n";
-    cout << "2. Move pawns by dice value\n";
-    cout << "3. Capture opponents by landing on them (not safe spots)\n";
-    cout << "4. Reach home with exact roll\n";
-    cout << "5. First to get all 4 pawns home wins!\n\n";
 
     Player players[4] = {
         Player('A', 0),
