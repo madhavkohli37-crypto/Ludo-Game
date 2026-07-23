@@ -26,3 +26,27 @@ vector<int> turn(int currentplayer) {
 vector<int>numbers;
     return F(currentplayer,t6,numbers);
 }
+vector<int> turnAI(int currentplayer) {
+    int t6 = 0;
+    vector<int> numbers;
+    
+    while (true) {
+        int diceRoll = (rand() % 6) + 1;
+        numbers.push_back(diceRoll);
+        cout << "\nAI Player " << currentplayer << " rolled a " << diceRoll << "!\n";
+        
+        if (diceRoll == 6 && t6 < 2) {
+            t6++;
+            cout << "AI got a 6! Rolling again...\n";
+        }
+        else if (diceRoll == 6) {
+            cout << "AI got 3 sixes in a row! Turn terminated!\n";
+            numbers.clear();
+            break;
+        }
+        else {
+            break;
+        }
+    }
+    return numbers;
+}
