@@ -99,8 +99,12 @@ return false;
         }
         if(n==3) {
             cout<<"You choose 3-Exit , Hence\n";
-    cout<<" =======GAME ENDS=====\n";
+    cout<<" =======GAME ENDS=====\n\nGOOD BYE !\n\n";
     return true;
+        }
+        else {
+            cout<<"Invalid selection , Please Try Again. \n\n\n";
+            cout<<"------X ABORTING TERMINAL X------\n";
         }
         return true;
     }
@@ -202,7 +206,7 @@ return false;
         else {
             cout<<"You have selected "<<n<<" which is an ";
             cout<<"Invalid selection ;\n";
-            cout<<"Kindly start the game again and make a valid selection for number of players b/w 1 & 4\n";
+            cout<<"Kindly start the game again and make a valid selection for number of players b/w 2 & 4\n";
             return false;
         }
         cout<<"Press Enter key to continue :";
