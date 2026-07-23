@@ -34,7 +34,7 @@ public:
     // ============ BOARD DISPLAY ============
 
     void askAndShowBoard(vector<string> &v) {
-        bool choice;
+        int choice;
         cout << "\nShow board? (1 = Yes, 0 = No): ";
         cin >> choice;
         cin.ignore();
