@@ -1,5 +1,4 @@
-#include "player.h"
-
+#include"player.h"
 class GameLogic {
 public:
     int safeSpots[8] = {0, 8, 13, 21, 26, 34, 39, 47};
@@ -33,18 +32,18 @@ public:
 
     // ============ BOARD DISPLAY ============
 
-    void askAndShowBoard(vector<string> &v) {
-        int choice;
-        cout << "\nShow board? (1 = Yes, 0 = No): ";
-        cin >> choice;
-        cin.ignore();
+    void askAndShowBoard(vector<string> &board) {
+    int choice;
+    cout << "\nShow board? (1 = Yes, 0 = No): ";
+    cin >> choice;
+    cin.ignore();
 
-        if (choice == true) {
-            for (string s : v) {
-                cout << s << endl;
-            }
+    if (choice == 1) {
+        for(string s:board) {
+            cout<<s<<endl;
         }
     }
+}
 
     // ============ STATUS DISPLAY ============
 
@@ -173,8 +172,6 @@ public:
         showStatus(players, numPlayers);
 
         // Collect dice rolls (from turn.h)
-        // NOTE: You'll need to include turn.h and call turn() from main,
-        // or pass the rolls vector as parameter. 
         // For now, this is a placeholder structure.
 
         // Since turn() is in turn.h and uses cin.get(), we can't easily call it here
