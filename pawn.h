@@ -1,4 +1,3 @@
-#include"turn.h"
 class Pawn {
 public:
     int position;      // -1 = in base, 0-56 = track/home stretch
