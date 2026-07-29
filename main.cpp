@@ -166,7 +166,7 @@ int main() {
 
                 // Only ask human to show board
                 if (!isAI[currentPlayerIdx]) {
-                   logic.askAndShowBoard(board);
+                   logic.askAndShowBoard(board, players, numPlayers);
                 }
 
                 if (extra) {
