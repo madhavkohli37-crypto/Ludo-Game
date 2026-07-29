@@ -9,12 +9,10 @@ public:
         }
         return false;
     }
-
     int getAbsPos(Player &player, int relPos) {
         if (relPos < 0 || relPos > 50) return -1;
         return (player.startOffset + relPos) % 52;
     }
-
     vector<int> getValidPawns(Player &player, int dice) {
         vector<int> valid;
         for (int i = 0; i < 4; i++) {
@@ -29,24 +27,65 @@ public:
         }
         return valid;
     }
+    void askAndShowBoard(vector<string> &board, Player players[], int numPlayers) {
+        int choice;
+        cout << "\nShow board? (1 = Yes, 0 = No): ";
+        cin >> choice;
+        cin.ignore();
 
-    // ============ BOARD DISPLAY ============
-
-    void askAndShowBoard(vector<string> &board) {
-    int choice;
-    cout << "\nShow board? (1 = Yes, 0 = No): ";
-    cin >> choice;
-    cin.ignore();
-
-    if (choice == 1) {
-        for(string s:board) {
-            cout<<s<<endl;
+        if (choice == 1) {
+            vector<string> tempBoard = board;
+            for (int r = 0; r < tempBoard.size(); r++) {
+                for (int c = 0; c < tempBoard[r].size(); c++) {
+                    if (tempBoard[r][c] == 'A' || tempBoard[r][c] == 'B' || 
+                        tempBoard[r][c] == 'C' || tempBoard[r][c] == 'D') {
+                        tempBoard[r][c] = ' ';
+                    }
+                }
+            }
+            int trackX[52] = {5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0, 0, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 6, 7, 7, 7, 7, 7, 7, 7, 8, 9, 10, 11, 12, 12, 12, 11, 10, 9, 8, 7, 7, 7, 7, 7, 7, 7, 6, 5};
+            int trackY[52] = {2, 4, 6, 8, 10, 12, 12, 12, 12, 12, 12, 14, 16, 16, 16, 16, 16, 16, 18, 20, 22, 24, 26, 28, 28, 28, 26, 24, 22, 20, 18, 16, 16, 16, 16, 16, 16, 14, 12, 12, 12, 12, 12, 12, 10, 8, 6, 4, 2, 0, 0, 0};
+            for (int i = 0; i < numPlayers; i++) {
+                char h = players[i].house;  
+                for (int pId = 0; pId < 4; pId++) {
+                    Pawn &p = players[i].pawns[pId];
+                    int r = -1, c = -1;
+                    if (p.position == -1) {
+                        if (h == 'A') { int bx[] = {0, 0, 2, 2}; int by[] = {2, 6, 2, 6}; r = bx[pId]; c = by[pId]; }
+                        else if (h == 'B') { int bx[] = {0, 0, 2, 2}; int by[] = {22, 26, 22, 26}; r = bx[pId]; c = by[pId]; }
+                        else if (h == 'C') { int bx[] = {10, 10, 12, 12}; int by[] = {22, 26, 22, 26}; r = bx[pId]; c = by[pId]; }
+                        else if (h == 'D') { int bx[] = {10, 10, 12, 12}; int by[] = {2, 6, 2, 6}; r = bx[pId]; c = by[pId]; }
+                    } 
+                    else if (p.position >= 0 && p.position <= 50 && !p.isHome) {
+                        int absPos = getAbsPos(players[i], p.position);
+                        if(absPos >= 0 && absPos < 52) {
+                            r = trackX[absPos];
+                            c = trackY[absPos];
+                        }
+                    } 
+                    else if (p.position >= 51 && p.position <= 55) {
+                        int idx = p.position - 51;
+                        if (h == 'A') { int hx[] = {6, 6, 6, 6, 6}; int hy[] = {2, 4, 6, 8, 10}; r = hx[idx]; c = hy[idx]; }
+                        else if (h == 'B') { int hx[] = {1, 2, 3, 4, 5}; int hy[] = {14, 14, 14, 14, 14}; r = hx[idx]; c = hy[idx]; }
+                        else if (h == 'C') { int hx[] = {6, 6, 6, 6, 6}; int hy[] = {26, 24, 22, 20, 18}; r = hx[idx]; c = hy[idx]; }
+                        else if (h == 'D') { int hx[] = {11, 10, 9, 8, 7}; int hy[] = {14, 14, 14, 14, 14}; r = hx[idx]; c = hy[idx]; }
+                    } 
+                    else if (p.isHome || p.position == 56) {
+                        if (h == 'A') { r = 6; c = 12; }
+                        else if (h == 'B') { r = 5; c = 14; }
+                        else if (h == 'C') { r = 6; c = 16; }
+                        else if (h == 'D') { r = 7; c = 14; }
+                    }
+                    if (r != -1 && c != -1 && r < tempBoard.size() && c < tempBoard[r].size()) {
+                        tempBoard[r][c] = h;
+                    }
+                }
+            }
+            for (string s : tempBoard) {
+                cout << s << endl;
+            }
         }
     }
-}
-
-    // ============ STATUS DISPLAY ============
-
     void showStatus(Player players[], int numPlayers) {
         cout << "\n========== PAWN STATUS ==========\n";
         for (int p = 0; p < numPlayers; p++) {
@@ -64,9 +103,6 @@ public:
         }
         cout << "=================================\n";
     }
-
-    // ============ CAPTURE LOGIC ============
-
     pair<int, int> checkCapture(Player players[], int numPlayers, int movingPlayerIdx, int absPos) {
         if (isSafe(absPos)) return {-1, -1};
 
@@ -95,9 +131,6 @@ public:
         cout << "Player " << player.house << "'s Pawn " << (pawnId + 1)
              << " was CAPTURED and sent back to base!\n";
     }
-
-    // ============ MOVE PAWN ============
-
     bool movePawn(Player players[], int numPlayers, int movingPlayerIdx, int pawnId, int dice) {
         Player &player = players[movingPlayerIdx];
         Pawn &p = player.pawns[pawnId];
@@ -122,21 +155,15 @@ public:
         }
 
         p.position = newPos;
-
-        // Reached home
         if (newPos == 56) {
             p.isHome = true;
             cout << "Pawn " << (pawnId + 1) << " reached HOME!\n";
             return true;
         }
-
-        // Home stretch
         if (newPos >= 51) {
             cout << "Pawn " << (pawnId + 1) << " entered home stretch at position " << newPos << "\n";
             return false;
         }
-
-        // On track - check for capture
         int absPos = getAbsPos(player, newPos);
         cout << "Pawn " << (pawnId + 1) << " moved to track position " << newPos;
         cout << " (absolute: " << absPos << ")\n";
@@ -145,7 +172,6 @@ public:
             cout << "Landed on a safe spot - cannot be captured here!\n";
             return false;
         }
-
         pair<int, int> captured = checkCapture(players, numPlayers, movingPlayerIdx, absPos);
 
         if (captured.first != -1) {
@@ -156,28 +182,13 @@ public:
 
         return false;
     }
-
-    // ============ EXTRA TURN HANDLING ============
-    // This function handles a complete turn (roll + move) for one player
-    // Returns true if the player earned an extra turn (can be called again)
-
     bool playTurn(Player players[], int numPlayers, int currentPlayerIdx, vector<string> &board) {
         Player &p = players[currentPlayerIdx];
 
         cout << "\n--------------------------------\n";
         cout << "PLAYER " << p.house << "'s TURN\n";
         cout << "--------------------------------\n";
-
-        // Show current status
         showStatus(players, numPlayers);
-
-        // Collect dice rolls (from turn.h)
-        // For now, this is a placeholder structure.
-
-        // Since turn() is in turn.h and uses cin.get(), we can't easily call it here
-        // without including. So the extra turn loop should be in main.cpp instead.
-        
-        // This function is kept simple - the extra turn loop goes in main
         return false;
     }
 };
