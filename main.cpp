@@ -106,7 +106,7 @@ int main() {
             if (isAI[currentPlayerIdx]) {
                 // AI rolls automatically
                 rolls = turnAI(currentPlayerIdx + 1);
-                delay(1000);
+                delay(2000);
             }
             else {
                 // Human presses Enter to roll
@@ -128,6 +128,7 @@ int main() {
 
                 if (valid.empty()) {
                     cout << "\nNo valid moves for " << dice << ".\n";
+                    delay(1000);
                     continue;
                 }
 
@@ -136,7 +137,7 @@ int main() {
                 // ============ AI DECISION ============
                 if (isAI[currentPlayerIdx]) {
                     cout << "\n[AI is thinking...]\n";
-                    delay(1000);
+                    delay(2000);
                     // Small delay for realism
                     choice = ai.choosePawn(p, valid, dice, players, numPlayers, logic);
                 }
@@ -163,12 +164,8 @@ int main() {
                 // Move pawn
                 bool extra = logic.movePawn(players, numPlayers, currentPlayerIdx, choice, dice);
                 logic.showStatus(players, numPlayers);
-
                 // Only ask human to show board
-                if (!isAI[currentPlayerIdx]) {
                    logic.askAndShowBoard(board, players, numPlayers);
-                }
-
                 if (extra) {
                     earnedExtra = true;
                     cout << "\n*** Extra turn earned! ***\n";
