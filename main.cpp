@@ -1,3 +1,4 @@
+#include"turn.h"
 #include "intro.h"
 #include "ai.h"
 
@@ -94,17 +95,18 @@ int main() {
 
             cout << "\n--------------------------------\n";
             cout << "PLAYER " << p.house << "'s TURN";
-            if (isAI[currentPlayerIdx]) cout << " [AI]";
+            if (isAI[currentPlayerIdx]) {cout << " [AI]";
+            }
             cout << "\n--------------------------------\n";
 
             logic.showStatus(players, numPlayers);
-
             // ============ ROLL DICE ============
             vector<int> rolls;
             
             if (isAI[currentPlayerIdx]) {
                 // AI rolls automatically
                 rolls = turnAI(currentPlayerIdx + 1);
+                delay(1000);
             }
             else {
                 // Human presses Enter to roll
@@ -134,8 +136,8 @@ int main() {
                 // ============ AI DECISION ============
                 if (isAI[currentPlayerIdx]) {
                     cout << "\n[AI is thinking...]\n";
+                    delay(1000);
                     // Small delay for realism
-                    for (volatile int i = 0; i < 50000000; i++);
                     choice = ai.choosePawn(p, valid, dice, players, numPlayers, logic);
                 }
                 // ============ HUMAN DECISION ============
@@ -164,7 +166,7 @@ int main() {
 
                 // Only ask human to show board
                 if (!isAI[currentPlayerIdx]) {
-                    logic.askAndShowBoard(board);
+                   logic.askAndShowBoard(board);
                 }
 
                 if (extra) {
