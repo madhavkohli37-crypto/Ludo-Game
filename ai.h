@@ -10,6 +10,7 @@ public:
             for (int id : validPawns) {
                 if (aiPlayer.pawns[id].position == -1) {
                     cout << "AI chooses to unlock Pawn " << (id + 1) << "\n";
+                    delay(700);
                     return id;
                 }
             }
@@ -19,6 +20,7 @@ public:
         for (int id : validPawns) {
             if (canCapture(aiPlayer, id, dice, players, numPlayers, logic)) {
                 cout << "AI chooses to capture with Pawn " << (id + 1) << "\n";
+                delay(700);
                 return id;
             }
         }
@@ -27,6 +29,7 @@ public:
         for (int id : validPawns) {
             if (aiPlayer.pawns[id].position + dice == 56) {
                 cout << "AI chooses to reach home with Pawn " << (id + 1) << "\n";
+                delay(700);
                 return id;
             }
         }
@@ -36,6 +39,7 @@ public:
             int newPos = aiPlayer.pawns[id].position + dice;
             if (newPos >= 51 && newPos < 56) {
                 cout << "AI enters home stretch with Pawn " << (id + 1) << "\n";
+                delay(250);
                 return id;
             }
         }
@@ -52,6 +56,7 @@ public:
         }
         
         cout << "AI chooses Pawn " << (bestPawn + 1) << " (furthest advanced)\n";
+        delay(700);
         return bestPawn;
     }
     
