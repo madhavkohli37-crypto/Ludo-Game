@@ -8,6 +8,7 @@
 #include<cstring>
 using namespace std;
 class welcome{
+// create "I am a boy "text for testing
     public:
     void showTitle() {
         cout << "\n";
