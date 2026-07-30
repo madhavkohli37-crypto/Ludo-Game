@@ -1,11 +1,8 @@
 #include"gamelogic.h"
-// ============ AI CLASS ============
 class AI {
 public:
     int choosePawn(Player &aiPlayer, vector<int> validPawns, int dice, 
                    Player players[], int numPlayers, GameLogic &logic) {
-        
-        // Priority 1: Unlock pawn (if rolled 6 and have base pawns)
         if (dice == 6) {
             for (int id : validPawns) {
                 if (aiPlayer.pawns[id].position == -1) {
@@ -15,8 +12,6 @@ public:
                 }
             }
         }
-        
-        // Priority 2: Capture opponent if possible
         for (int id : validPawns) {
             if (canCapture(aiPlayer, id, dice, players, numPlayers, logic)) {
                 cout << "AI chooses to capture with Pawn " << (id + 1) << "\n";
@@ -24,8 +19,6 @@ public:
                 return id;
             }
         }
-        
-        // Priority 3: Reach home with exact roll
         for (int id : validPawns) {
             if (aiPlayer.pawns[id].position + dice == 56) {
                 cout << "AI chooses to reach home with Pawn " << (id + 1) << "\n";
@@ -33,8 +26,6 @@ public:
                 return id;
             }
         }
-        
-        // Priority 4: Enter home stretch
         for (int id : validPawns) {
             int newPos = aiPlayer.pawns[id].position + dice;
             if (newPos >= 51 && newPos < 56) {
@@ -43,8 +34,6 @@ public:
                 return id;
             }
         }
-        
-        // Priority 5: Move pawn closest to home (highest position)
         int bestPawn = validPawns[0];
         int maxPos = aiPlayer.pawns[bestPawn].position;
         
