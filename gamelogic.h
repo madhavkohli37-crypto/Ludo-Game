@@ -1,4 +1,11 @@
-#include"player.h"
+#include "player.h"
+#include <iostream>
+#include <vector>
+#include <string>
+#include <limits> // Required for numeric_limits to clear the buffer
+
+using namespace std;
+
 class GameLogic {
 public:
     int safeSpots[8] = {0, 8, 13, 21, 26, 34, 39, 47};
@@ -9,10 +16,12 @@ public:
         }
         return false;
     }
+
     int getAbsPos(Player &player, int relPos) {
         if (relPos < 0 || relPos > 50) return -1;
         return (player.startOffset + relPos) % 52;
     }
+
     vector<int> getValidPawns(Player &player, int dice) {
         vector<int> valid;
         for (int i = 0; i < 4; i++) {
@@ -27,11 +36,26 @@ public:
         }
         return valid;
     }
+
     void askAndShowBoard(vector<string> &board, Player players[], int numPlayers) {
         int choice;
-        cout << "\nShow board? (1 = Yes, 0 = No): ";
-        cin >> choice;
-        cin.ignore();
+        
+        // Bulletproof input loop
+        while (true) {
+            cout << "\nShow board? (1 = Yes, 0 = No): ";
+            cin >> choice;
+
+            // Check if the input failed (e.g., user typed a letter) OR isn't 0 or 1
+            if (cin.fail() || (choice != 0 && choice != 1)) {
+                cin.clear(); // Clear the error flag
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Trash the bad input
+                cout << "[!] Invalid input. Please enter 1 or 0.\n";
+            } else {
+                // Input was valid. Clear the leftover newline character before proceeding
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                break; // Exit the loop
+            }
+        }
 
         if (choice == 1) {
             vector<string> tempBoard = board;
@@ -43,8 +67,10 @@ public:
                     }
                 }
             }
+
             int trackX[52] = {5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0, 0, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 6, 7, 7, 7, 7, 7, 7, 7, 8, 9, 10, 11, 12, 12, 12, 11, 10, 9, 8, 7, 7, 7, 7, 7, 7, 7, 6, 5};
             int trackY[52] = {2, 4, 6, 8, 10, 12, 12, 12, 12, 12, 12, 14, 16, 16, 16, 16, 16, 16, 18, 20, 22, 24, 26, 28, 28, 28, 26, 24, 22, 20, 18, 16, 16, 16, 16, 16, 16, 14, 12, 12, 12, 12, 12, 12, 10, 8, 6, 4, 2, 0, 0, 0};
+            
             for (int i = 0; i < numPlayers; i++) {
                 char h = players[i].house;  
                 for (int pId = 0; pId < 4; pId++) {
@@ -86,6 +112,7 @@ public:
             }
         }
     }
+
     void showStatus(Player players[], int numPlayers) {
         cout << "\n========== PAWN STATUS ==========\n";
         for (int p = 0; p < numPlayers; p++) {
@@ -103,6 +130,7 @@ public:
         }
         cout << "=================================\n";
     }
+
     pair<int, int> checkCapture(Player players[], int numPlayers, int movingPlayerIdx, int absPos) {
         if (isSafe(absPos)) return {-1, -1};
 
@@ -131,6 +159,7 @@ public:
         cout << "Player " << player.house << "'s Pawn " << (pawnId + 1)
              << " was CAPTURED and sent back to base!\n";
     }
+
     bool movePawn(Player players[], int numPlayers, int movingPlayerIdx, int pawnId, int dice) {
         Player &player = players[movingPlayerIdx];
         Pawn &p = player.pawns[pawnId];
@@ -182,6 +211,7 @@ public:
 
         return false;
     }
+
     bool playTurn(Player players[], int numPlayers, int currentPlayerIdx, vector<string> &board) {
         Player &p = players[currentPlayerIdx];
 
