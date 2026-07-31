@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <limits> // Required for numeric_limits to clear the buffer
+#include <limits> 
 
 using namespace std;
 
@@ -40,20 +40,18 @@ public:
     void askAndShowBoard(vector<string> &board, Player players[], int numPlayers) {
         int choice;
         
-        // Bulletproof input loop
+        // Bulletproof input
         while (true) {
             cout << "\nShow board? (1 = Yes, 0 = No): ";
             cin >> choice;
 
-            // Check if the input failed (e.g., user typed a letter) OR isn't 0 or 1
             if (cin.fail() || (choice != 0 && choice != 1)) {
-                cin.clear(); // Clear the error flag
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Trash the bad input
+                cin.clear(); 
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
                 cout << "[!] Invalid input. Please enter 1 or 0.\n";
             } else {
-                // Input was valid. Clear the leftover newline character before proceeding
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                break; // Exit the loop
+                break; 
             }
         }
 
@@ -209,16 +207,6 @@ public:
             return true;
         }
 
-        return false;
-    }
-
-    bool playTurn(Player players[], int numPlayers, int currentPlayerIdx, vector<string> &board) {
-        Player &p = players[currentPlayerIdx];
-
-        cout << "\n--------------------------------\n";
-        cout << "PLAYER " << p.house << "'s TURN\n";
-        cout << "--------------------------------\n";
-        showStatus(players, numPlayers);
         return false;
     }
 };
