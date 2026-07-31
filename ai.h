@@ -1,4 +1,5 @@
-#include"gamelogic.h"
+#include "gamelogic.h"
+
 class AI {
 public:
     int choosePawn(Player &aiPlayer, vector<int> validPawns, int dice, 
