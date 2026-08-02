@@ -1,11 +1,16 @@
 #include "player.h"
 #include <iostream>
 #include <vector>
-#include <string>
-#include <limits> 
+#include <ctime>
+#include <cstring>
+#include <climits>
+#include <thread>
+#include <chrono>
 
 using namespace std;
-
+void Delay(int ms) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+}
 class GameLogic {
 public:
     int safeSpots[8] = {0, 8, 13, 21, 26, 34, 39, 47};
@@ -42,13 +47,14 @@ public:
         
         // Bulletproof input
         while (true) {
-            cout << "\nShow board? (1 = Yes, 0 = No): ";
+            cout << "\n🗺️  Show board? 👀 (1 = Yes, 0 = No): ";
             cin >> choice;
+            Delay(1000);
 
             if (cin.fail() || (choice != 0 && choice != 1)) {
                 cin.clear(); 
                 cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-                cout << "[!] Invalid input. Please enter 1 or 0.\n";
+                cout << "⚠️  [!] Invalid input! Please enter 1 or 0... even a bot wouldn't mess that up. 🤡 🤖 ❌\n";
             } else {
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 break; 
@@ -112,6 +118,7 @@ public:
     }
 
     void showStatus(Player players[], int numPlayers) {
+        Delay(1000);
         cout << "\n========== PAWN STATUS ==========\n";
         for (int p = 0; p < numPlayers; p++) {
             cout << "Player " << players[p].house << ": ";
@@ -154,56 +161,66 @@ public:
         player.pawns[pawnId].position = -1;
         player.pawns[pawnId].isActive = false;
         player.pawns[pawnId].isHome = false;
-        cout << "Player " << player.house << "'s Pawn " << (pawnId + 1)
-             << " was CAPTURED and sent back to base!\n";
+        Delay(500);
+       cout << "💥 OOF! " << player.house << "'s Pawn " << (pawnId + 1) << " was brutally CAPTURED and sent crying back to base! 💀 🏃 💨\n";
+       Delay(1500);
     }
 
     bool movePawn(Player players[], int numPlayers, int movingPlayerIdx, int pawnId, int dice) {
+        Delay(500);
         Player &player = players[movingPlayerIdx];
         Pawn &p = player.pawns[pawnId];
 
         // Unlock from base
         if (p.position == -1) {
             if (dice != 6) {
-                cout << "Pawn " << (pawnId + 1) << " is in base. Need a 6 to unlock!\n";
+                cout << "🔒  Pawn " << (pawnId + 1) << " is trapped in base jail! You need a miraculous 6 to bust them out! 🎲 ⏳\n";
+                Delay(1500);
                 return false;
             }
             p.position = 0;
             p.isActive = true;
-            cout << "Pawn " << (pawnId + 1) << " unlocked! Entered the track.\n";
+            cout << "🔓 ✨ Pawn " << (pawnId + 1) << " is finally unlocked and charging onto the track! Let's go! 🚀 🔥\n";
+            Delay(1500);
             return false;
         }
 
         int newPos = p.position + dice;
 
         if (newPos > 56) {
-            cout << "Need exact roll to reach home. Can't move.\n";
+            cout << "🛑 So close yet so far! You need the exact roll to enter home. Hang on right at the doorstep! 🚪 ❌\n";
+            Delay(1500);
             return false;
         }
 
         p.position = newPos;
         if (newPos == 56) {
             p.isHome = true;
-            cout << "Pawn " << (pawnId + 1) << " reached HOME!\n";
+            cout << "🎉 🏆  ABSOLUTE LEGEND! Pawn " << (pawnId + 1) << " safely reached HOME! Touchdown! 🥳 🏠 ✨\n";
+            Delay(1500);
             return true;
         }
         if (newPos >= 51) {
-            cout << "Pawn " << (pawnId + 1) << " entered home stretch at position " << newPos << "\n";
+            cout << "🏃 💨 Boom! Pawn " << (pawnId + 1) << " entered the home stretch at position " << newPos << "! The finish line is right there! 🏁 ✨\n";
+            Delay(1500);
             return false;
         }
         int absPos = getAbsPos(player, newPos);
-        cout << "Pawn " << (pawnId + 1) << " moved to track position " << newPos;
-        cout << " (absolute: " << absPos << ")\n";
+        cout << "👟 💨  Pawn " << (pawnId + 1) << " advances to track position " << newPos;
+cout << " (absolute: " << absPos << ") 🎯✨\n";
+Delay(1500);
 
         if (isSafe(absPos)) {
-            cout << "Landed on a safe spot - cannot be captured here!\n";
+            cout << "🛡️  Sanctuary reached! Landed on a safe spot—you're completely shielded from enemy captures here! 🏰 ✨\n";
+            Delay(1500);
             return false;
         }
         pair<int, int> captured = checkCapture(players, numPlayers, movingPlayerIdx, absPos);
 
         if (captured.first != -1) {
             sendToBase(players[captured.first], captured.second);
-            cout << ">> CAPTURE SUCCESSFUL! You get an extra turn! <<\n";
+            cout << "⚔️ 💥  >> CAPTURE SUCCESSFUL! Enemy sent packing! Enjoy your bonus extra turn! 🚀 🔥 <<\n";
+            Delay(1500);
             return true;
         }
 

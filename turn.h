@@ -12,7 +12,7 @@ void delay(int ms) {
 }
 
 vector<int> F(int currentplayer, int t6, vector<int>& numbers) {
-    cout << "Press Enter to roll the dice --> ";
+   cout << "⌨️ Press Enter to roll the dice 🎲 --> ";
     cin.get();
     
     int diceRoll = (rand() % 6) + 1;
@@ -21,11 +21,12 @@ vector<int> F(int currentplayer, int t6, vector<int>& numbers) {
     
     if (diceRoll == 6 && t6 < 2) {
         t6++;
-        cout << "You got a 6 so you can roll again\n";
+        cout << "🎲 You got a 6 so you can roll again! Let's go! 🔥\n";
+        delay(1500);
         F(currentplayer, t6, numbers);
     }
     else if (diceRoll == 6) {
-        cout << "You got 3 sixes in a row hence your turn is terminated!\n";
+       cout << "💀 You got 3 sixes in a row... Absolute tragedy! Turn terminated! 🚫📉🥀\n";
         numbers.clear();
     }
     return numbers;
@@ -44,11 +45,11 @@ vector<int> turnAI(int currentplayer) {
     while (true) {
         int diceRoll = (rand() % 6) + 1;
         numbers.push_back(diceRoll);
-        cout << "\nAI Player " << currentplayer << " rolled a " << diceRoll << "!\n";
+        cout << "\n🤖 AI Player " << currentplayer << " rolled a " << diceRoll << "! 🎲\n";
         
         if (diceRoll == 6 && t6 < 2) {
             t6++;
-            cout << "AI got a 6! Rolling again...\n";
+            cout << "🤖 AI got a 6! Rolling again... The machine is unstoppable! 🎲🔥\n";
             delay(1000);
         }
         else if (diceRoll == 6) {

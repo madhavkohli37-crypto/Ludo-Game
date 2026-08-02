@@ -7,31 +7,41 @@ public:
         if (dice == 6) {
             for (int id : validPawns) {
                 if (aiPlayer.pawns[id].position == -1) {
-                    cout << "AI chooses to unlock Pawn " << (id + 1) << "\n";
-                    delay(1000);
+                    cout << "🤖 AI tactical maneuver: Unlocking Pawn " << (id + 1) << "! Watch and learn, human. ♟️ 🔥\n";
+                    delay(2000);
+                    cout << "🤖 AI: 'Should I lower the difficulty setting for you? Oh wait, there is no lower setting than your current gameplay.' 📉 🤡\n";
+                    delay(2000);
                     return id;
                 }
             }
         }
         for (int id : validPawns) {
             if (canCapture(aiPlayer, id, dice, players, numPlayers, logic)) {
-                cout << "AI chooses to capture with Pawn " << (id + 1) << "\n";
+                cout << "🤖 AI target locked! Pawn " << (id + 1) << " is coming in for a ruthless execution! 🎯 💀 🔥\n";
                 delay(1000);
+                cout<<"Look at that momentum! Too bad you can't relate.' 🏃💨🏁✨\n";
+                delay(1000);
+                cout << "🤖 AI: 'Even a random number generator with a dead battery makes better tactical choices than you.' 🎲 🔋 ❌\n";
+                delay(1500);
                 return id;
             }
         }
         for (int id : validPawns) {
             if (aiPlayer.pawns[id].position + dice == 56) {
-                cout << "AI chooses to reach home with Pawn " << (id + 1) << "\n";
-                delay(1000);
+                cout << "🤖 AI victory lap! Pawn " << (id + 1) << " safely reaches home. One step closer to total domination! 🏆 🚀 🔥\n";
+                delay(2000);
+                cout << "🤖 AI: 'I ran a complete simulation of this game, and the only variable I couldn't account for was how historically bad your moves would be.' 💀 📉 🔥\n";
+                delay(2000);
                 return id;
             }
         }
         for (int id : validPawns) {
             int newPos = aiPlayer.pawns[id].position + dice;
             if (newPos >= 51 && newPos < 56) {
-                cout << "AI enters home stretch with Pawn " << (id + 1) << "\n";
-                delay(1000);
+                cout << "🤖 AI: 'Pawn " << (id + 1) << " is waltzing into the home stretch. Look at that momentum! Too bad you can't relate.' 🏃 💨 🏁 ✨ \n";
+                delay(2000);
+                cout << "🤖 AI: 'Is your keyboard broken, or are you just naturally this bad at making decisions?' ⌨️ 💥\n";
+                delay(2000);
                 return id;
             }
         }
@@ -45,8 +55,8 @@ public:
             }
         }
         
-        cout << "AI chooses Pawn " << (bestPawn + 1) << " (furthest advanced)\n";
-        delay(1000);
+        cout << "🤖 AI flex: Choosing Pawn " << (bestPawn + 1) << " (furthest advanced). Gotta widen the gap while you're still stuck trying to figure out the rules! 📈 🚀 ✨\n";
+        delay(2500);
         return bestPawn;
     }
     

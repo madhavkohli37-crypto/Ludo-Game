@@ -11,13 +11,13 @@ int showMainMenu() {
     int choice;
     while (true) {
         cout << "╔═══════════════════════════════════════════════╗\n";
-        cout << "║                  MAIN MENU                    ║\n";
-        cout << "╠═══════════════════════════════════════════════╣\n";
-        cout << "║  [1] Start New Game                           ║\n";
-        cout << "║  [2] View Rule Book & Start Game              ║\n";
-        cout << "║  [3] Exit Game                                ║\n";
-        cout << "╚═══════════════════════════════════════════════╝\n";
-        cout << "Enter your choice (1-3): ";
+    cout << "║                  🌟 MAIN MENU 🎮              ║\n";
+    cout << "╠═══════════════════════════════════════════════╣\n";
+    cout << "║  🚀 [1] Start New Game                        ║\n";
+    cout << "║  📖 [2] View Rule Book & Start Game           ║\n";
+    cout << "║  🚪 [3] Exit Game                             ║\n";
+    cout << "╚═══════════════════════════════════════════════╝\n";
+    cout << "⌨️  Enter your choice (1-3): ";
         cin >> choice;
 
         if (cin.fail() || choice < 1 || choice > 3) {
@@ -43,22 +43,25 @@ int main() {
     welcome w;
     
     w.showTitle();
-    delay(2000);
+    delay(3500);
     int menuChoice = showMainMenu();
     
     if (menuChoice == 3) {
-        cout << "\n>>> Exiting Game. Goodbye! <<<\n";
+        cout << "\n>>> Exiting Game. Goodbye! ✨ <<<\n";
+        delay(1000);
         return 0;
     } 
     else if (menuChoice == 2) {
+        cout<<"\n\n⏳ Loading....\n\n";
+        delay(2000);
         w.fun(2);
     }
     
     w.text();
-    
+    delay(1500);
     // Gets players safely
     numPlayers = w.askNumberOfPlayers();
-
+    delay(1500);
     // Bulletproof Human Player input
     cout << "\nHow many HUMAN players? (1-" << numPlayers << "): ";
     while (true) {
@@ -78,7 +81,8 @@ int main() {
     for (int i = numHuman; i < numPlayers; i++) {
         isAI[i] = true;
     }
-
+    cout<<"\n\n⏳ Loading....\n\n";
+    delay(1500);
     cout << "\n--- Player Setup ---\n";
     for (int i = 0; i < numPlayers; i++) {
         cout << "Player " << (char)('A' + i);
@@ -96,9 +100,15 @@ int main() {
         Player('C', 26),
         Player('D', 39)
     };
-
+    delay(1500);
     GameLogic logic;
     logic.showStatus(players, numPlayers);
+    cout<<"\n\n⏳  Starting game... Grab a snack, we're loading up!  🔥 ✨...\n\n";
+    delay(2500);
+    cout<<"🧐  Holding on a second... definitely not blaming it on the Wi-Fi!  📶😂\n\n";
+    delay(1500);
+    cout<<"🎮  Step into the action!\n\n";
+    delay(1500);
 
     cout << "\n========== GAME START ==========\n";
     while (!winner) {
@@ -110,7 +120,7 @@ int main() {
 
             cout << "\n--------------------------------\n";
             cout << "PLAYER " << p.house << "'s TURN";
-            if (isAI[currentPlayerIdx]) { cout << " [AI]"; }
+            if (isAI[currentPlayerIdx]) { cout << " 🤖  [AI]"; }
             cout << "\n--------------------------------\n";
 
             logic.showStatus(players, numPlayers);
@@ -125,39 +135,40 @@ int main() {
             }
 
             if (rolls.empty()) {
-                cout << "\nTurn ended (3 sixes).\n";
+                cout << "\n  💔 🥀  Turn ended (3 sixes).\n";
+                delay(1000);
                 break;
             }
-
-            cout << "\nRolls: ";
+            delay(1500);
+            cout << "\n🎲  Rolls: ";
             for (int r : rolls) cout << r << " ";
             cout << "\n";
-            
+            delay(1500);
             for (int dice : rolls) {
                 vector<int> valid = logic.getValidPawns(p, dice);
 
                 if (valid.empty()) {
-                    cout << "\nNo valid moves for " << dice << ".\n";
+                    cout << "\n🚫 Oof! Zero valid moves available for a roll of " << dice << ". lol XD ! 📉💀❌\n";
                     delay(1000);
                     continue;
                 }
 
                 int choice;
                 if (isAI[currentPlayerIdx]) {
-                    cout << "\n[AI is thinking...]\n";
+                    cout << "\n 🤖  [AI is thinking...]\n";
                     delay(2000);
                     choice = ai.choosePawn(p, valid, dice, players, numPlayers, logic);
                 }
                 else {
                     cout << "\nValid pawns: ";
                     for (int id : valid) cout << (id + 1) << " ";
-                    cout << "\nSelect pawn: ";
+                    cout << "\n♟️  Select pawn: ";
 
                     // Bulletproof Pawn Selection
                     while (true) {
                         cin >> choice;
                         if (cin.fail()) {
-                            cout << "[!] Invalid input! Please enter a number: ";
+                            cout << "[!] 🚫  Invalid input! Please enter a number: ";
                             cin.clear();
                             cin.ignore(numeric_limits<streamsize>::max(), '\n');
                             continue;
@@ -172,7 +183,7 @@ int main() {
                         }
                         
                         if (!ok) {
-                            cout << "[!] Invalid pawn! Please select from valid pawns: ";
+                            cout << "[!] ⚠️  Invalid pawn! Please select from valid pawns: ";
                         } else {
                             break; 
                         }
@@ -184,15 +195,20 @@ int main() {
                    logic.askAndShowBoard(board, players, numPlayers);
                 if (extra) {
                     earnedExtra = true;
-                    cout << "\n*** Extra turn earned! ***\n";
+                    cout << "\n*** 😁  Extra turn earned! ***\n";
+                    delay(1500);
                 }
             }
             
             if (p.pawnsAtHome() == 4) {
                 winner = true;
                 cout << "\n\n>>> PLAYER " << p.house;
-                if (isAI[currentPlayerIdx]) cout << " [AI]";
-                cout << " WINS! <<<\n";
+                if (isAI[currentPlayerIdx]) cout << " 🤖 [AI]";
+                cout << " WINS!  🏆  <<<\n";
+                cout << "🤖 AI: 'Is that your best move? My code runs on a toaster and I still play better.' 💀🔥\n";
+                cout << "🤡 Skill issue detected. Have you considered turning the game off and touching grass? 🌱😂\n";
+                cout << "🤖 AI: 'GG EZ. Better luck next century, human.' 💀🏆\n";
+                cout<<"lol  ☠️ 🤣\n";
                 break;
             }
         }
@@ -201,10 +217,11 @@ int main() {
             currentPlayerIdx = (currentPlayerIdx + 1) % numPlayers;
         }
     }
+    
 
-    cout << "\n========== GAME OVER ==========\n";
-    cout << "THANKS FOR PLAYING\n";
-    cout << "HOPE YOU ENJOYED and WE WISH TO SEE YOU AGAIN !\n\n";
-    cout << "GOOD BYE ! \n";
+    cout << "\n 🕹️ ========== Game Over... Time to log off and touch some grass!  😂🌿 ==========\n";
+    cout << "THANKS FOR PLAYING  😊\n";
+    cout << "HOPE YOU ENJOYED and WE WISH TO SEE YOU AGAIN  ✨ !\n\n";
+    cout << "GOOD BYE  👋! \n";
     return 0;
 }
